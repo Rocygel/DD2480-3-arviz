@@ -1,0 +1,64 @@
+[False, False, False, False, False, True, False, False, False, True, False, False, False, False, True, False, False, False, False, False, False, False, False]
+13.043478260869565%
+[False, False, False, False, False, True, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False]
+13.043478260869565%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False]
+8.695652173913043%
+[False, False, False, False, False, True, False, False, False, True, False, False, False, False, True, False, False, False, False, False, False, False, True]
+17.391304347826086%
+[False, False, False, False, False, True, False, False, False, True, False, False, False, False, True, False, False, False, False, False, False, False, True]
+17.391304347826086%
+[False, False, False, False, False, True, False, False, False, True, False, False, False, False, False, False, False, False, False, False, False, False, True]
+13.043478260869565%
+[True, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, True, True, False, True]
+34.78260869565217%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, False, False, False, True]
+21.73913043478261%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, True, True, False, True, False, False, False, True]
+26.08695652173913%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, True, True, False, True, False, False, False, True]
+26.08695652173913%
+[True, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, True, False, False, True]
+30.434782608695656%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, False, False, False, True]
+21.73913043478261%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, True, True, False, True, False, False, False, True]
+26.08695652173913%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, True, True, False, True, False, False, False, True]
+26.08695652173913%
+[False, False, False, False, False, True, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True]
+17.391304347826086%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True]
+13.043478260869565%
+[True, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, True, False, False, True]
+30.434782608695656%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, True, False, False, False, False, True]
+21.73913043478261%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, True]
+13.043478260869565%
+[True, True, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, False, False, False, True]
+30.434782608695656%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, False, False, False, True]
+21.73913043478261%
+[True, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, True, False, True, True, False, False, True]
+26.08695652173913%
+[True, False, False, True, False, False, False, False, False, False, False, False, False, False, True, False, True, False, True, True, False, False, True]
+30.434782608695656%
+[False, False, False, False, False, True, True, False, False, False, False, False, False, False, True, False, True, True, False, False, False, False, True]
+26.08695652173913%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, True, False, False, False, False, True]
+21.73913043478261%
+[True, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, True, False, False, True]
+30.434782608695656%
+[False, False, False, False, False, True, True, False, False, False, False, False, False, False, True, False, True, True, False, False, False, False, True]
+26.08695652173913%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, False, True]
+13.043478260869565%
+[False, False, False, False, False, False, False, False, False, False, False, False, False, False, True, False, False, False, False, False, False, False, True]
+8.695652173913043%
+[True, False, False, True, False, False, False, False, False, False, False, False, False, False, True, False, True, False, True, True, False, False, True]
+30.434782608695656%
+[False, False, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, False, False, False, True]
+21.73913043478261%
+[True, True, False, False, False, True, False, False, False, False, False, False, False, False, True, False, True, False, True, False, False, False, True]
+30.434782608695656%
