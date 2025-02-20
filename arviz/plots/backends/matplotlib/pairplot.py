@@ -417,14 +417,14 @@ def plot_pair(
 
     if marginals and numvars == 2:
         branchesVisited[50] = True
-        fo = open("pairplot_converage.txt", "a")
+        fo = open("pairplot_coverage.txt", "a")
         for i in range (0, len(branchesVisited)):
             if branchesVisited[i] is True:
                 fo.write(f"{i}\n")
         fo.close()
         return ax_return
     
-    fo = open("pairplot_converage.txt", "a")
+    fo = open("pairplot_coverage.txt", "a")
     for i in range (0, len(branchesVisited)):
         if branchesVisited[i] is True:
             fo.write(f"{i}\n")
