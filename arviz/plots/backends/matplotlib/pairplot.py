@@ -41,7 +41,7 @@ def plot_pair(
     reference_values_kwargs,
 ):
     ## branches visited
-    branchesVisited = []
+    branchesVisited = [False] * 51
 
     """Matplotlib pairplot."""
     backend_kwargs = _init_kwargs_dict(backend_kwargs)
@@ -252,7 +252,7 @@ def plot_pair(
         ##    if rcParams["plot.max_subplots"] is None
         ##    else rcParams["plot.max_subplots"]
         ##)
-        if rcParams["plot.maxsubplots"] is None:
+        if rcParams["plot.max_subplots"] is None:
             branchesVisited[22] = True
             max_plots = num_subplot_cols**2
         else: 
@@ -417,13 +417,17 @@ def plot_pair(
 
     if marginals and numvars == 2:
         branchesVisited[50] = True
+        fo = open("pairplot_converage.txt", "a")
+        for i in range (0, len(branchesVisited)):
+            if branchesVisited[i] is True:
+                fo.write(f"{i}\n")
+        fo.close()
         return ax_return
     
-    fo = open("pairplot_converage.txt", "w", 1)
-    for i in range (0, branchesVisited.length - 1):
+    fo = open("pairplot_converage.txt", "a")
+    for i in range (0, len(branchesVisited)):
         if branchesVisited[i] is True:
-            fo.write(str(i))
-    
+            fo.write(f"{i}\n")
     fo.close()
 
     return ax
