@@ -1,15 +1,14 @@
 def main():
     branchesVisited = [False] * 1000
 
-    print("Hello, this is the main function!")
-    file = open("testfile.txt", "r")
+    file = open("pairplot_coverage.txt", "r")
     for line in file:
         branchesVisited.append(line)
         branchesVisited[int(line)] = True
 
     file.close()
 
-    file = open("testfile.txt", "w")
+    file = open("pairplot_coverage.txt", "w")
 
     for i in range (1, len(branchesVisited)):
         if branchesVisited[i] == True:
