@@ -1095,6 +1095,7 @@ def test_plot_dist_comparison_warn(models):
         {"kind": "p_value"},
         {"kind": "t_stat", "t_stat": "std"},
         {"kind": "t_stat", "t_stat": 0.5, "bpv": True},
+        {"kind": "t_stat", "t_stat": 0.5, "bpv": True, "flatten_pp":  None, "flatten": ["dim1", "dim2"]},
     ],
 )
 def test_plot_bpv(models, kwargs):
@@ -1112,6 +1113,19 @@ def test_plot_bpv_discrete():
         show=False,
     )
     assert axes.shape
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"group": "dfgkljdfg"},
+        {"kind": "hello"}, 
+        {"reference": "aabc"},
+        {"hdi_prob": 10},
+    ],
+)
+def test_plot_bpv_invalid(models, kwargs):
+    with pytest.raises((TypeError, ValueError)): 
+        plot_bpv(models.model_1, backend="bokeh", show=False, **kwargs)
 
 
 @pytest.mark.parametrize(

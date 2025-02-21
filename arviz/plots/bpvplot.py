@@ -193,65 +193,94 @@ def plot_bpv(
         >>> data = az.load_arviz_data("regression1d")
         >>> az.plot_bpv(data, kind="t_stat", t_stat=lambda x:np.percentile(x, q=50, axis=-1))
     """
-    if group not in ("posterior", "prior"):
+    branchCoverage = [False] * 18
+
+    if group not in ("posterior", "prior"): #0
+        branchCoverage [0] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`group` argument must be either `posterior` or `prior`")
 
     for groups in (f"{group}_predictive", "observed_data"):
-        if not hasattr(data, groups):
-            raise TypeError(f'`data` argument must have the group "{groups}"')
+        if not hasattr(data, groups): #1
+            branchCoverage [1] = True
+            with open("testCoverage.txt", "a") as file:
+                file.write("\n" + " ".join(map(str, branchCoverage)))
+            raise TypeError(f'`data` argument must have the group "{groups}"') 
 
-    if kind.lower() not in ("t_stat", "u_value", "p_value"):
+    if kind.lower() not in ("t_stat", "u_value", "p_value"): #2
+        branchCoverage [2] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`kind` argument must be either `t_stat`, `u_value`, or `p_value`")
 
-    if reference is not None and reference.lower() not in ("analytical", "samples"):
+    if reference is not None and reference.lower() not in ("analytical", "samples"): #3
+        branchCoverage [3] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`reference` argument must be either `analytical`, `samples`, or `None`")
-
-    if hdi_prob is None:
+    if hdi_prob is None: #4
+        branchCoverage [4] = True
         hdi_prob = rcParams["stats.ci_prob"]
-    elif not 1 >= hdi_prob > 0:
+    elif not 1 >= hdi_prob > 0: #5
+        branchCoverage [5] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise ValueError("The value of hdi_prob should be in the interval (0, 1]")
 
-    if smoothing is None:
+    if smoothing is None: #6
+        branchCoverage [6] = True
         smoothing = kind.lower() == "u_value"
 
-    if data_pairs is None:
+    if data_pairs is None: #7
+        branchCoverage [7] = True
         data_pairs = {}
 
-    if labeller is None:
+    if labeller is None: #8
+        branchCoverage [8] = True
         labeller = BaseLabeller()
 
-    if backend is None:
+    if backend is None: #9
+        branchCoverage [9] = True
         backend = rcParams["plot.backend"]
     backend = backend.lower()
 
     observed = data.observed_data
 
-    if group == "posterior":
+    if group == "posterior": #10
+        branchCoverage [10] = True
         predictive_dataset = data.posterior_predictive
-    elif group == "prior":
+    elif group == "prior": #11
+        branchCoverage [11] = True
         predictive_dataset = data.prior_predictive
 
-    if var_names is None:
+    if var_names is None: #12
+        branchCoverage [12] = True
         var_names = list(observed.data_vars)
     var_names = _var_names(var_names, observed, filter_vars)
     pp_var_names = [data_pairs.get(var, var) for var in var_names]
     pp_var_names = _var_names(pp_var_names, predictive_dataset, filter_vars)
 
-    if flatten_pp is None:
-        if flatten is None:
+    if flatten_pp is None: #13
+        branchCoverage [13] = True
+        if flatten is None: #14
+            branchCoverage [14] = True
             flatten_pp = list(predictive_dataset.dims)
-        else:
+        else: #15
+            branchCoverage [15] = True
             flatten_pp = flatten
-    if flatten is None:
+    if flatten is None: #16
+        branchCoverage [16] = True
         flatten = list(observed.dims)
 
-    if coords is None:
+    if coords is None: #17
+        branchCoverage [17] = True
         coords = {}
 
     total_pp_samples = predictive_dataset.sizes["chain"] * predictive_dataset.sizes["draw"]
 
-    for key in coords.keys():
-        coords[key] = np.where(np.in1d(observed[key], coords[key]))[0]
+    for key in coords.keys(): 
+        coords[key] = np.where(np.in1d(observed[key], coords[key]))[0] 
 
     obs_plotters = filter_plotters_list(
         list(
@@ -261,7 +290,7 @@ def plot_bpv(
         ),
         "plot_t_stats",
     )
-    length_plotters = len(obs_plotters)
+    length_plotters = len(obs_plotters) 
     pp_plotters = [
         tup
         for _, tup in zip(
@@ -305,4 +334,9 @@ def plot_bpv(
     # TODO: Add backend kwargs
     plot = get_plotting_function("plot_bpv", "bpvplot", backend)
     axes = plot(**bpvplot_kwargs)
+
+    with open("testCoverage.txt", "a") as file:
+        file.write("\n" + " ".join(map(str, branchCoverage)))
+
     return axes
+    
