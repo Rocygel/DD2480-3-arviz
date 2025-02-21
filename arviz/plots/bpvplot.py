@@ -197,19 +197,27 @@ def plot_bpv(
 
     if group not in ("posterior", "prior"): #0
         branchCoverage [0] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`group` argument must be either `posterior` or `prior`")
 
     for groups in (f"{group}_predictive", "observed_data"):
         if not hasattr(data, groups): #1
             branchCoverage [1] = True
+            with open("testCoverage.txt", "a") as file:
+                file.write("\n" + " ".join(map(str, branchCoverage)))
             raise TypeError(f'`data` argument must have the group "{groups}"') 
 
     if kind.lower() not in ("t_stat", "u_value", "p_value"): #2
         branchCoverage [2] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`kind` argument must be either `t_stat`, `u_value`, or `p_value`")
 
     if reference is not None and reference.lower() not in ("analytical", "samples"): #3
         branchCoverage [3] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`reference` argument must be either `analytical`, `samples`, or `None`")
 
     if hdi_prob is None: #4
@@ -217,6 +225,8 @@ def plot_bpv(
         hdi_prob = rcParams["stats.ci_prob"]
     elif not 1 >= hdi_prob > 0: #5
         branchCoverage [5] = True
+        with open("testCoverage.txt", "a") as file:
+            file.write("\n" + " ".join(map(str, branchCoverage)))
         raise ValueError("The value of hdi_prob should be in the interval (0, 1]")
 
     if smoothing is None: #6
