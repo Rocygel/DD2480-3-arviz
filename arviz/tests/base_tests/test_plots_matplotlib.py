@@ -227,6 +227,8 @@ def test_plot_separation(kwargs):
 
 
 #### Added coverage tests for DD2480 see above separation test // Roger
+#### Both of these two tests check for branches where the predicates for idata
+#### lead errors
 @pytest.mark.parametrize(
     "kwargs",
     [
