@@ -109,6 +109,10 @@ gave: Name                     Stmts   Miss Branch BrPart  Cover
 ----------------------------------------------------------
 arviz/plots/essplot.py      75      2     20      2    96%
 
+Another tool:
+https://app.codecov.io/gh/arviz-devs/arviz/tree/master/arviz%2Fplots
+calculates essplot.py to be 100% covered.
+
 Which differs from my test.
 
 ## Coverage improvement
