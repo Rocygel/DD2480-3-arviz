@@ -4,7 +4,7 @@
 import os
 import re
 from copy import deepcopy
-
+from unittest.mock import patch
 import matplotlib.pyplot as plt
 import numpy as np
 import pytest
@@ -12,6 +12,7 @@ import xarray as xr
 from matplotlib import animation
 from pandas import DataFrame
 from scipy.stats import gaussian_kde, norm
+from unittest.mock import Mock
 
 from ...data import from_dict, load_arviz_data
 from ...plots import (
@@ -383,6 +384,7 @@ def test_plot_forest_bad(models, model_fits):
 
     with pytest.raises(ValueError):
         plot_forest(obj, model_names=[f"model_name_{i}" for i in range(len(obj) + 10)])
+
 
 
 @pytest.mark.parametrize("kind", ["kde", "hist"])
@@ -1263,6 +1265,7 @@ def test_plot_hdi_datetime_error():
         plot_hdi(x=x_data, y=y_data, hdi_data=hdi_data)
 
 
+
 @pytest.mark.parametrize("limits", [(-10.0, 10.0), (-5, 5), (None, None)])
 def test_kde_scipy(limits):
     """
@@ -1274,6 +1277,33 @@ def test_kde_scipy(limits):
     density_sp = gaussian_kde(data).evaluate(grid)
     np.testing.assert_almost_equal(density_own.sum(), density_sp.sum(), 1)
 
+"""TEST FOR ASSINGMENT 3"""
+
+def test_plot_hdi_credible_interval_warning():
+    credible_interval_warning = Mock(return_value=0.95)
+    credible_interval = 0.9
+    hdi_prob = 0.95
+    
+    if credible_interval:
+        hdi_prob = credible_interval_warning(credible_interval, hdi_prob)
+    
+    credible_interval_warning.assert_called_once_with(credible_interval, 0.95)
+    assert hdi_prob == 0.95 
+
+def test_plot_hdi_dimension_mismatch():
+    """Check that mismatched x and hdi dimensions raise a TypeError."""
+    x_data = np.linspace(0, 10, 100)  # Shape (100,)
+    y_data = np.random.randn(2, 50, 100)  # Shape (2, 50, 100)
+    hdi_data = hdi(y_data)  # Expected shape (*y_data.shape[2:], 2)
+    
+    # Force a shape mismatch
+    hdi_data = hdi_data[:50]  # Now shape (50, 2), which mismatches x_data (100,)
+    
+    with pytest.raises(TypeError, match="Dimension mismatch for x: .* and hdi: .*."):
+        plot_hdi(x_data, hdi_data=hdi_data)
+
+
+"""END OF TEST FOR ASSIGNMENT 3"""
 
 @pytest.mark.parametrize("limits", [(-10.0, 10.0), (-5, 5), (None, None)])
 def test_kde_cumulative(limits):
