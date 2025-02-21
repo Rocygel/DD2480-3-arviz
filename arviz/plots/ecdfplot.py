@@ -246,6 +246,8 @@ def plot_ecdf(
         # if pointwise specified, confidence_bands must be a bool or 'pointwise'
     elif confidence_bands not in [False, "pointwise"] and pointwise:
         covrage[2]= True
+        with open("coverage.txt", "a") as output:
+            output.write(str(covrage)+"\n")
         raise ValueError(
             f"Cannot specify both `confidence_bands='{confidence_bands}'` and `pointwise=True`"
         )
@@ -260,6 +262,8 @@ def plot_ecdf(
         )
         if ci_prob is not None:
             covrage[4]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("Cannot specify both `fpr` and `ci_prob`")
         ci_prob = 1 - fpr
 
@@ -271,9 +275,13 @@ def plot_ecdf(
         covrage[6]= True
         if cdf is not None:
             covrage[7]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("You cannot specify both `values2` and `cdf`")
         if scipy_ecdf is None:
             covrage[8]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError(
                 "The `values2` argument is deprecated and `scipy.stats.ecdf` is not available. "
                 "Please use `cdf` instead."
@@ -289,12 +297,18 @@ def plot_ecdf(
         covrage[9]= True
         if confidence_bands:
             covrage[10]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("For confidence bands you must specify cdf")
         if difference is True:
             covrage[11]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("For ECDF difference plot you must specify cdf")
         if pit:
             covrage[12]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("For PIT plot you must specify cdf")
 
     values = np.ravel(values)
@@ -398,7 +412,7 @@ def plot_ecdf(
 
 
  
-    with open("covrage.txt", "a") as output:
+    with open("coverage.txt", "a") as output:
         output.write(str(covrage)+"\n")
 
 
