@@ -396,12 +396,11 @@ def plot_ecdf(
     plot = get_plotting_function("plot_ecdf", "ecdfplot", backend)
     ax = plot(**ecdf_plot_args)
 
-    true_CV = sum(covrage)
-    length_CV= len(covrage)
-    tot_CV = (true_CV/length_CV)*100
+
+ 
     with open("covrage.txt", "a") as output:
         output.write(str(covrage)+"\n")
-        output.write(str(tot_CV)+"%\n")
+
 
 
 
