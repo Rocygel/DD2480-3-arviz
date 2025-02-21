@@ -225,7 +225,6 @@ def test_plot_separation(kwargs):
     ax = plot_separation(idata=idata, y="outcome", **kwargs)
     assert ax
 
-
 #### Added coverage tests for DD2480 see above separation test // Roger
 #### Both of these two tests check for branches where the predicates for idata
 #### lead errors
@@ -744,6 +743,7 @@ def test_plot_pair_shared(sharex, sharey, marginals):
         else:
             num_shared_y = j + 1
         assert len(ax[j, 0].get_shared_y_axes().get_siblings(ax[j, 0])) == num_shared_y
+
 
 @pytest.mark.parametrize("kind", ["kde", "cumulative", "scatter"])
 @pytest.mark.parametrize("alpha", [None, 0.2, 1])
