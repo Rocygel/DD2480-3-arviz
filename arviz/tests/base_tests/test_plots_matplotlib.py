@@ -710,6 +710,54 @@ def test_plot_pair_shared(sharex, sharey, marginals):
             num_shared_y = j + 1
         assert len(ax[j, 0].get_shared_y_axes().get_siblings(ax[j, 0])) == num_shared_y
 
+## Modified of above test to include branch 18 (if point_estimate)
+@pytest.mark.parametrize("sharex", ["col", None])
+@pytest.mark.parametrize("sharey", ["row", None])
+@pytest.mark.parametrize("marginals", [True, False])
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {
+            "point_estimate": "mean",
+            "reference_values": {"mu": 0, "tau": 0},
+            "reference_values_kwargs": {"c": "C0", "marker": "*"},
+        },
+    ],
+)
+def test_plot_pair_shared_branch_eighteen(sharex, sharey, marginals, kwargs):
+    # Generate fake data and plot
+    rng = np.random.default_rng()
+    idata = from_dict({"a": rng.standard_normal((4, 500, 5))})
+    numvars = 5 - (not marginals)
+    if sharex is None and sharey is None:
+        ax = plot_pair(idata, marginals=marginals)
+    else:
+        backend_kwargs = {}
+        if sharex is not None:
+            backend_kwargs["sharex"] = sharex
+        if sharey is not None:
+            backend_kwargs["sharey"] = sharey
+        with pytest.warns(UserWarning):
+            ax = plot_pair(idata, marginals=marginals, backend_kwargs=backend_kwargs)
+
+    # Check x axes shared correctly
+    for i in range(numvars):
+        num_shared_x = numvars - i
+        assert len(ax[-1, i].get_shared_x_axes().get_siblings(ax[-1, i])) == num_shared_x
+
+    # Check y axes shared correctly
+    for j in range(numvars):
+        if marginals:
+            num_shared_y = j
+
+            # Check diagonal has unshared axis
+            assert len(ax[j, j].get_shared_y_axes().get_siblings(ax[j, j])) == 1
+
+            if j == 0:
+                continue
+        else:
+            num_shared_y = j + 1
+        assert len(ax[j, 0].get_shared_y_axes().get_siblings(ax[j, 0])) == num_shared_y
 
 @pytest.mark.parametrize("kind", ["kde", "cumulative", "scatter"])
 @pytest.mark.parametrize("alpha", [None, 0.2, 1])
