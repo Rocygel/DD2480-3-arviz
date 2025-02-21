@@ -1,6 +1,6 @@
 """Plot quantile or local effective sample sizes."""
 
-import numpy as np 
+import numpy as np
 import xarray as xr
 
 from ..data import convert_to_dataset
@@ -10,8 +10,6 @@ from ..sel_utils import xarray_var_iter
 from ..stats import ess
 from ..utils import _var_names, get_coords
 from .plot_utils import default_grid, filter_plotters_list, get_plotting_function
-from helper_essplot import calculate_coverage
-#9 Stmts
 
 
 def plot_ess(
@@ -39,7 +37,7 @@ def plot_ess(
     backend_kwargs=None,
     show=None,
     **kwargs,
-): #10 Stmts
+):
     r"""Generate quantile, local, or evolution ESS plots.
 
     The local and the quantile ESS plots are recommended for checking
@@ -190,55 +188,29 @@ def plot_ess(
         ... )
 
     """
-    coverage_array = []
-    #11 Stmts
-
     valid_kinds = ("local", "quantile", "evolution")
     kind = kind.lower()
     if kind not in valid_kinds:
-        coverage_array.append("1")
         raise ValueError(f"Invalid kind, kind must be one of {valid_kinds} not {kind}")
-    #16 Stmts
 
     if coords is None:
         coords = {}
-        coverage_array.append("2")
-    #19 Stmts
-
-    if "chain" in coords:
-        coverage_array.append("3")
+    if "chain" in coords or "draw" in coords:
         raise ValueError("chain and draw are invalid coordinates for this kind of plot")
-    #22 Stmts
-    
-    if "draw" in coords:
-        coverage_array.append("4")
-        raise ValueError("chain and draw are invalid coordinates for this kind of plot")
-    #25 Stmts
-
     if labeller is None:
-        coverage_array.append("5")
         labeller = BaseLabeller()
-    #28 Stmts
-
-    if kind == "evolution":
-        coverage_array.append("6")
-        extra_methods = False
-    else: extra_methods
-    #32 Stmts
+    extra_methods = False if kind == "evolution" else extra_methods
 
     data = get_coords(convert_to_dataset(idata, group="posterior"), coords)
     var_names = _var_names(var_names, data, filter_vars)
     n_draws = data.sizes["draw"]
     n_samples = n_draws * data.sizes["chain"]
-    #36 Stmts
 
     ess_tail_dataset = None
     mean_ess = None
     sd_ess = None
-    #39 Stmts
 
     if kind == "quantile":
-        coverage_array.append("7")
         probs = np.linspace(1 / n_points, 1 - 1 / n_points, n_points)
         xdata = probs
         ylabel = "{} for quantiles"
@@ -249,9 +221,7 @@ def plot_ess(
             ],
             dim="ess_dim",
         )
-        #45 Stmts
     elif kind == "local":
-        coverage_array.append("8")
         probs = np.linspace(0, 1, n_points, endpoint=False)
         xdata = probs
         ylabel = "{} for small intervals"
@@ -268,9 +238,7 @@ def plot_ess(
             ],
             dim="ess_dim",
         )
-        #51 Stmts
     else:
-        coverage_array.append("9")
         first_draw = data.draw.values[0]
         ylabel = "{}"
         xdata = np.linspace(n_samples / n_points, n_samples, n_points)
@@ -287,7 +255,6 @@ def plot_ess(
             ],
             dim="ess_dim",
         )
-        #58 Stmts
         ess_tail_dataset = xr.concat(
             [
                 ess(
@@ -300,20 +267,16 @@ def plot_ess(
             ],
             dim="ess_dim",
         )
-        #59 Stmts
 
     plotters = filter_plotters_list(
         list(xarray_var_iter(ess_dataset, var_names=var_names, skip_dims={"ess_dim"})), "plot_ess"
     )
     length_plotters = len(plotters)
     rows, cols = default_grid(length_plotters, grid=grid)
-    #62 Stmts
 
     if extra_methods:
-        coverage_array.append("10")
         mean_ess = ess(data, var_names=var_names, method="mean", relative=relative)
         sd_ess = ess(data, var_names=var_names, method="sd", relative=relative)
-    #65 Stmts
 
     essplot_kwargs = dict(
         ax=ax,
@@ -345,22 +308,12 @@ def plot_ess(
         backend_kwargs=backend_kwargs,
         show=show,
     )
-    #66 Stmts
 
     if backend is None:
-        coverage_array.append("11")
         backend = rcParams["plot.backend"]
     backend = backend.lower()
-    #70 Stmts  
 
     # TODO: Add backend kwargs
     plot = get_plotting_function("plot_ess", "essplot", backend)
     ax = plot(**essplot_kwargs)
-    #72 Stmts
-
-    # kör helper, skicka array
-    calculate_coverage(coverage_array)
-    #73
-
     return ax
-    #74 Stmts
