@@ -225,6 +225,40 @@ def test_plot_separation(kwargs):
     ax = plot_separation(idata=idata, y="outcome", **kwargs)
     assert ax
 
+#### Added coverage tests for DD2480 see above separation test // Roger
+#### Both of these two tests check for branches where the predicates for idata
+#### lead errors
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {},
+        {"y_hat_line": True},
+        {"expected_events": True},
+        {"y_hat_line_kwargs": {"linestyle": "dotted"}},
+        {"exp_events_kwargs": {"marker": "o"}},
+    ],
+)
+def test_plot_separation_idata_none_error(kwargs):
+    idata = None
+    with pytest.raises(ValueError):
+        plot_separation(idata=idata, y="outcome", **kwargs)
+
+
+@pytest.mark.parametrize(
+    "kwargs",
+    [
+        {},
+        {"y_hat_line": True},
+        {"expected_events": True},
+        {"y_hat_line_kwargs": {"linestyle": "dotted"}},
+        {"exp_events_kwargs": {"marker": "o"}},
+    ],
+)
+def test_plot_separation_idata_type_error(kwargs):
+    idata = load_arviz_data("kapowwwwowcrazy")
+    with pytest.raises(ValueError):
+        plot_separation(idata=idata, y="outcome", **kwargs)
+########
 
 @pytest.mark.parametrize(
     "kwargs",

@@ -219,7 +219,6 @@ def plot_bpv(
         with open("testCoverage.txt", "a") as file:
             file.write("\n" + " ".join(map(str, branchCoverage)))
         raise TypeError("`reference` argument must be either `analytical`, `samples`, or `None`")
-
     if hdi_prob is None: #4
         branchCoverage [4] = True
         hdi_prob = rcParams["stats.ci_prob"]
@@ -340,3 +339,4 @@ def plot_bpv(
         file.write("\n" + " ".join(map(str, branchCoverage)))
 
     return axes
+    
