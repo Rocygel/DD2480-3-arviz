@@ -40,9 +40,6 @@ def plot_pair(
     reference_values,
     reference_values_kwargs,
 ):
-    ## branches visited
-    branchesVisited = [False] * 51
-
     """Matplotlib pairplot."""
     backend_kwargs = _init_kwargs_dict(backend_kwargs)
     backend_kwargs = {
@@ -74,22 +71,18 @@ def plot_pair(
     point_estimate_kwargs.setdefault("color", "k")
 
     if kind != "kde":
-        branchesVisited[0] = True
         kde_kwargs.setdefault("contourf_kwargs", {})
         kde_kwargs["contourf_kwargs"].setdefault("alpha", 0)
         kde_kwargs.setdefault("contour_kwargs", {})
         kde_kwargs["contour_kwargs"].setdefault("colors", "k")
 
     if reference_values:
-        branchesVisited[1] = True
         reference_values_copy = {}
         label = []
         for variable in list(reference_values.keys()):
             if " " in variable:
-                branchesVisited[2] = True
                 variable_copy = variable.replace(" ", "\n", 1)
             else:
-                branchesVisited[3] = True
                 variable_copy = variable
 
             label.append(variable_copy)
@@ -98,7 +91,6 @@ def plot_pair(
         difference = set(flat_var_names).difference(set(label))
 
         if difference:
-            branchesVisited[4] = True
             warn = [diff.replace("\n", " ", 1) for diff in difference]
             warnings.warn(
                 "Argument reference_values does not include reference value for: {}".format(
@@ -121,7 +113,6 @@ def plot_pair(
 
     # pylint: disable=too-many-nested-blocks
     if numvars == 2:
-        branchesVisited[5] = True
         (figsize, ax_labelsize, _, xt_labelsize, linewidth, markersize) = _scale_fig_size(
             figsize, textsize, numvars - 1, numvars - 1
         )
@@ -136,9 +127,7 @@ def plot_pair(
         x = plotters[0][-1].flatten()
         y = plotters[1][-1].flatten()
         if ax is None:
-            branchesVisited[6] = True
             if marginals:
-                branchesVisited[7] = True
                 # Instantiate figure and grid
                 widths = [2, 2, 2, 1]
                 heights = [1.4, 2, 2, 2]
@@ -169,15 +158,11 @@ def plot_pair(
                 ax_hist_x.tick_params(labelleft=False, labelbottom=False)
                 ax_hist_y.tick_params(labelleft=False, labelbottom=False)
             else:
-                branchesVisited[8] = True
                 fig, ax = plt.subplots(numvars - 1, numvars - 1, **backend_kwargs)
         else:
-            branchesVisited[9] = True
             if marginals:
-                branchesVisited[10] = True
                 assert ax.shape == (numvars, numvars)
                 if ax[0, 1] is not None and ax[0, 1].get_figure() is not None:
-                    branchesVisited[11] = True
                     ax[0, 1].remove()
                 ax_return = ax
                 ax_hist_x = ax[0, 0]
@@ -186,17 +171,13 @@ def plot_pair(
                 for val, ax_, rotate in ((x, ax_hist_x, False), (y, ax_hist_y, True)):
                     plot_dist(val, textsize=xt_labelsize, rotated=rotate, ax=ax_, **marginal_kwargs)
             else:
-                branchesVisited[12] = True
                 ax = np.atleast_2d(ax)[0, 0]
 
         if "scatter" in kind:
-            branchesVisited[13] = True
             ax.scatter(x, y, **scatter_kwargs)
         if "kde" in kind:
-            branchesVisited[14] = True
             plot_kde(x, y, ax=ax, **kde_kwargs)
         if "hexbin" in kind:
-            branchesVisited[15] = True
             hexbin = ax.hexbin(
                 x,
                 y,
@@ -206,12 +187,10 @@ def plot_pair(
             ax.grid(False)
 
         if kind == "hexbin" and colorbar:
-            branchesVisited[16] = True
             cbar = ax.figure.colorbar(hexbin, ticks=[hexbin.norm.vmin, hexbin.norm.vmax], ax=ax)
             cbar.ax.set_yticklabels(["low", "high"], fontsize=ax_labelsize)
 
         if divergences:
-            branchesVisited[17] = True
             ax.plot(
                 x[diverging_mask],
                 y[diverging_mask],
@@ -219,11 +198,9 @@ def plot_pair(
             )
 
         if point_estimate:
-            branchesVisited[18] = True
             pe_x = calculate_point_estimate(point_estimate, x)
             pe_y = calculate_point_estimate(point_estimate, y)
             if marginals:
-                branchesVisited[19] = True
                 ax_hist_x.axvline(pe_x, **point_estimate_kwargs)
                 ax_hist_y.axhline(pe_y, **point_estimate_kwargs)
 
@@ -233,7 +210,6 @@ def plot_pair(
             ax.scatter(pe_x, pe_y, **point_estimate_marker_kwargs)
 
         if reference_values:
-            branchesVisited[20] = True
             ax.plot(
                 reference_values_copy[flat_var_names[0]],
                 reference_values_copy[flat_var_names[1]],
@@ -244,23 +220,15 @@ def plot_pair(
         ax.tick_params(labelsize=xt_labelsize)
 
     else:
-        branchesVisited[21] = True
         not_marginals = int(not marginals)
         num_subplot_cols = numvars - not_marginals
-        ##max_plots = (
-        ##    num_subplot_cols**2
-        ##    if rcParams["plot.max_subplots"] is None
-        ##    else rcParams["plot.max_subplots"]
-        ##)
-        if rcParams["plot.max_subplots"] is None:
-            branchesVisited[22] = True
-            max_plots = num_subplot_cols**2
-        else: 
-            branchesVisited[23] = True
-            max_plots = rcParams["plot.max_subplots"]
+        max_plots = (
+            num_subplot_cols**2
+            if rcParams["plot.max_subplots"] is None
+            else rcParams["plot.max_subplots"]
+        )
         cols_to_plot = np.sum(np.arange(1, num_subplot_cols + 1).cumsum() <= max_plots)
         if cols_to_plot < num_subplot_cols:
-            branchesVisited[24] = True
             vars_to_plot = cols_to_plot
             warnings.warn(
                 "rcParams['plot.max_subplots'] ({max_plots}) is smaller than the number "
@@ -269,7 +237,6 @@ def plot_pair(
                 UserWarning,
             )
         else:
-            branchesVisited[25] = True
             vars_to_plot = numvars - not_marginals
 
         (figsize, ax_labelsize, _, xt_labelsize, _, markersize) = _scale_fig_size(
@@ -279,22 +246,18 @@ def plot_pair(
         point_estimate_marker_kwargs.setdefault("s", markersize + 50)
 
         if ax is None:
-            branchesVisited[26] = True
             if backend_kwargs.pop("sharex", None) is not None:
-                branchesVisited[27] = True
                 warnings.warn(
                     "'sharex' keyword is ignored. For non-standard sharing, provide 'ax'.",
                     UserWarning,
                 )
             if backend_kwargs.pop("sharey", None) is not None:
-                branchesVisited[28] = True
                 warnings.warn(
                     "'sharey' keyword is ignored. For non-standard sharing, provide 'ax'.",
                     UserWarning,
                 )
             backend_kwargs["sharex"] = "col"
             if not_marginals:
-                branchesVisited[29] = True
                 backend_kwargs["sharey"] = "row"
             fig, ax = plt.subplots(
                 vars_to_plot,
@@ -302,7 +265,6 @@ def plot_pair(
                 **backend_kwargs,
             )
             if backend_kwargs.get("sharey") is None:
-                branchesVisited[30] = True
                 for j in range(0, vars_to_plot):
                     for i in range(0, j):
                         ax[j, i].axes.sharey(ax[j, 0])
@@ -314,29 +276,22 @@ def plot_pair(
             for j in range(0, vars_to_plot):
                 var2 = plotters[j + not_marginals][-1].flatten()
                 if i > j:
-                    branchesVisited[31] = True
                     if ax[j, i].get_figure() is not None:
-                        branchesVisited[32] = True
                         ax[j, i].remove()
                     continue
 
                 elif i == j and marginals:
-                    branchesVisited[33] = True
                     loc = "right"
                     plot_dist(var1, ax=ax[i, j], **marginal_kwargs)
 
                 else:
-                    branchesVisited[34] = True
                     if i == j:
-                        branchesVisited[35] = True
                         loc = "left"
 
                     if "scatter" in kind:
-                        branchesVisited[36] = True
                         ax[j, i].scatter(var1, var2, **scatter_kwargs)
 
                     if "kde" in kind:
-                        branchesVisited[37] = True
                         plot_kde(
                             var1,
                             var2,
@@ -345,18 +300,15 @@ def plot_pair(
                         )
 
                     if "hexbin" in kind:
-                        branchesVisited[38] = True
                         ax[j, i].grid(False)
                         hexbin = ax[j, i].hexbin(var1, var2, gridsize=gridsize, **hexbin_kwargs)
 
                     if divergences:
-                        branchesVisited[39] = True
                         ax[j, i].plot(
                             var1[diverging_mask], var2[diverging_mask], **divergences_kwargs
                         )
 
                     if kind == "hexbin" and colorbar:
-                        branchesVisited[40] = True
                         hexbin_values.append(hexbin.norm.vmin)
                         hexbin_values.append(hexbin.norm.vmax)
                         divider = make_axes_locatable(ax[-1, -1])
@@ -367,14 +319,12 @@ def plot_pair(
                         cbar.ax.set_yticklabels(["low", "high"], fontsize=ax_labelsize)
 
                     if point_estimate:
-                        branchesVisited[41] = True
                         pe_x = calculate_point_estimate(point_estimate, var1)
                         pe_y = calculate_point_estimate(point_estimate, var2)
                         ax[j, i].axvline(pe_x, **point_estimate_kwargs)
                         ax[j, i].axhline(pe_y, **point_estimate_kwargs)
 
                         if marginals:
-                            branchesVisited[42] = True
                             ax[j - 1, i].axvline(pe_x, **point_estimate_kwargs)
                             pe_last = calculate_point_estimate(point_estimate, plotters[-1][-1])
                             ax[-1, -1].axvline(pe_last, **point_estimate_kwargs)
@@ -382,11 +332,9 @@ def plot_pair(
                         ax[j, i].scatter(pe_x, pe_y, **point_estimate_marker_kwargs)
 
                     if reference_values:
-                        branchesVisited[43] = True
                         x_name = flat_var_names[i]
                         y_name = flat_var_names[j + not_marginals]
                         if (x_name not in difference) and (y_name not in difference):
-                            branchesVisited[44] = True
                             ax[j, i].plot(
                                 reference_values_copy[x_name],
                                 reference_values_copy[y_name],
@@ -394,16 +342,12 @@ def plot_pair(
                             )
 
                 if j != vars_to_plot - 1:
-                    branchesVisited[45] = True
                     plt.setp(ax[j, i].get_xticklabels(), visible=False)
                 else:
-                    branchesVisited[46] = True
                     ax[j, i].set_xlabel(f"{flat_var_names[i]}", fontsize=ax_labelsize, wrap=True)
                 if i != 0:
-                    branchesVisited[47] = True
                     plt.setp(ax[j, i].get_yticklabels(), visible=False)
                 else:
-                    branchesVisited[48] = True
                     ax[j, i].set_ylabel(
                         f"{flat_var_names[j + not_marginals]}",
                         fontsize=ax_labelsize,
@@ -412,22 +356,8 @@ def plot_pair(
                 ax[j, i].tick_params(labelsize=xt_labelsize)
 
     if backend_show(show):
-        branchesVisited[49] = True
         plt.show()
 
     if marginals and numvars == 2:
-        branchesVisited[50] = True
-        fo = open("pairplot_coverage.txt", "a")
-        for i in range (0, len(branchesVisited)):
-            if branchesVisited[i] is True:
-                fo.write(f"{i}\n")
-        fo.close()
         return ax_return
-    
-    fo = open("pairplot_coverage.txt", "a")
-    for i in range (0, len(branchesVisited)):
-        if branchesVisited[i] is True:
-            fo.write(f"{i}\n")
-    fo.close()
-
     return ax
