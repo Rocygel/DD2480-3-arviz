@@ -10,6 +10,7 @@ from ..sel_utils import xarray_var_iter
 from ..stats import ess
 from ..utils import _var_names, get_coords
 from .plot_utils import default_grid, filter_plotters_list, get_plotting_function
+from helper_essplot import calculate_coverage
 #9 Stmts
 
 
@@ -350,17 +351,16 @@ def plot_ess(
         coverage_array.append("11")
         backend = rcParams["plot.backend"]
     backend = backend.lower()
-    #70 Stmts
-
-    #true_CV = sum(coverage_array)
-    #length_CV= len(coverage_array)
-    #tot_CV = (true_CV/length_CV)*100
-    with open("essplot_coverage.txt", "a") as output:
-        output.write(f"{coverage_array}\n")
-    #72 Stmts
+    #70 Stmts  
 
     # TODO: Add backend kwargs
     plot = get_plotting_function("plot_ess", "essplot", backend)
     ax = plot(**essplot_kwargs)
+    #72 Stmts
+
+    # kör helper, skicka array
+    calculate_coverage(coverage_array)
+    #73
+
     return ax
-    #75 Stmts
+    #74 Stmts
