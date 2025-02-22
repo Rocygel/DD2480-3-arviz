@@ -582,6 +582,20 @@ def test_plot_dist_2d_kde(continuous_model, kwargs):
 
 
 @pytest.mark.parametrize(
+    "kwargs",
+    [
+        {"kind": "wrong_kind"},
+        {"plot_kwargs": {"linestyle": "-"}},
+        {"contour": True, "fill_last": False},
+        {"contour": False},
+    ],
+)
+def test_plot_dist_kind_type_error(continuous_model,kwargs):
+    with pytest.raises(TypeError):
+        plot_dist(continuous_model["x"], kind= "wronggg",**kwargs)
+
+
+@pytest.mark.parametrize(
     "kwargs", [{"plot_kwargs": {"linestyle": "-"}}, {"cumulative": True}, {"rug": True}]
 )
 def test_plot_kde_quantiles(continuous_model, kwargs):
@@ -1611,6 +1625,9 @@ def test_plot_khat_bad_input(models):
     with pytest.raises(ValueError):
         plot_khat(models.model_1.sample_stats)
 
+def test_plot_khat_false_annotate():
+    khats = np.array([0, 0, 0.6, 0.6, 0.8, 0.9, 0.9, 2, 3, 4, 1.5])
+    plot_khat(khats, threshold=1,annotate=True)
 
 @pytest.mark.parametrize(
     "kwargs",
