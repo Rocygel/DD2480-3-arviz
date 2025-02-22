@@ -1591,6 +1591,9 @@ def test_plot_khat_bad_input(models):
     with pytest.raises(ValueError):
         plot_khat(models.model_1.sample_stats)
 
+def test_plot_khat_false_annotate():
+    khats = np.array([0, 0, 0.6, 0.6, 0.8, 0.9, 0.9, 2, 3, 4, 1.5])
+    plot_khat(khats, threshold=1,annotate=True)
 
 @pytest.mark.parametrize(
     "kwargs",
