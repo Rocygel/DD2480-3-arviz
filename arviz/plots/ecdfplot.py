@@ -1,7 +1,7 @@
 """Plot ecdf or ecdf-difference plot with confidence bands."""
 
 import warnings
-
+import array
 import numpy as np
 from scipy.stats import uniform
 
@@ -230,8 +230,12 @@ def plot_ecdf(
         >>>     difference = True
         >>> )
     """
+
+    covrage = [False]*23
     if confidence_bands is True:
+        covrage[0]= True
         if pointwise:
+            covrage[1]= True
             warnings.warn(
                 "`pointwise` has been deprecated. Use `confidence_bands='pointwise'` instead.",
                 FutureWarning,
@@ -241,27 +245,43 @@ def plot_ecdf(
             confidence_bands = "auto"
         # if pointwise specified, confidence_bands must be a bool or 'pointwise'
     elif confidence_bands not in [False, "pointwise"] and pointwise:
+        covrage[2]= True
+        with open("coverage.txt", "a") as output:
+            output.write(str(covrage)+"\n")
         raise ValueError(
             f"Cannot specify both `confidence_bands='{confidence_bands}'` and `pointwise=True`"
         )
+    
 
     if fpr is not None:
+        covrage[3]= True
         warnings.warn(
             "`fpr` has been deprecated. Use `ci_prob=1-fpr` or set `rcParam['stats.ci_prob']` to"
             "`1-fpr`.",
             FutureWarning,
         )
         if ci_prob is not None:
+            covrage[4]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("Cannot specify both `fpr` and `ci_prob`")
         ci_prob = 1 - fpr
 
     if ci_prob is None:
+        covrage[5]= True
         ci_prob = rcParams["stats.ci_prob"]
 
     if values2 is not None:
+        covrage[6]= True
         if cdf is not None:
+            covrage[7]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("You cannot specify both `values2` and `cdf`")
         if scipy_ecdf is None:
+            covrage[8]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError(
                 "The `values2` argument is deprecated and `scipy.stats.ecdf` is not available. "
                 "Please use `cdf` instead."
@@ -274,17 +294,28 @@ def plot_ecdf(
         cdf = scipy_ecdf(np.ravel(values2)).cdf.evaluate
 
     if cdf is None:
+        covrage[9]= True
         if confidence_bands:
+            covrage[10]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("For confidence bands you must specify cdf")
         if difference is True:
+            covrage[11]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("For ECDF difference plot you must specify cdf")
         if pit:
+            covrage[12]= True
+            with open("coverage.txt", "a") as output:
+                output.write(str(covrage)+"\n")
             raise ValueError("For PIT plot you must specify cdf")
 
     values = np.ravel(values)
     values.sort()
 
     if pit:
+        covrage[13]= True
         warnings.warn(
             "`pit` has been deprecated. Specify `values=cdf(values)` instead.",
             FutureWarning,
@@ -295,6 +326,7 @@ def plot_ecdf(
         eval_points = np.linspace(1 / npoints, 1, npoints)
 
     if eval_points is None:
+        covrage[14]= True
         warnings.warn(
             "In future versions, if `eval_points` is not provided, then the ECDF will be evaluated"
             " at the unique values of the sample. To keep the current behavior, provide "
@@ -302,6 +334,7 @@ def plot_ecdf(
             BehaviourChangeWarning,
         )
         if confidence_bands in ["optimized", "simulated"]:
+            covrage[15]= True
             warnings.warn(
                 "For simultaneous bands to be correctly calibrated, specify `eval_points` "
                 "independent of the `values`"
@@ -311,19 +344,25 @@ def plot_ecdf(
         eval_points = np.asarray(eval_points)
 
     if difference or confidence_bands:
+        covrage[16]= True
         cdf_at_eval_points = cdf(eval_points)
     else:
+ 
         cdf_at_eval_points = np.zeros_like(eval_points)
 
     x_coord, y_coord = _get_ecdf_points(values, eval_points, difference)
 
     if difference:
+        covrage[17]= True
         y_coord -= cdf_at_eval_points
 
     if confidence_bands:
+        covrage[18]= True
         ndraws = len(values)
         if confidence_bands == "auto":
+            covrage[19]= True
             if ndraws < 200 or num_trials >= 250 * np.sqrt(ndraws):
+                covrage[20]= True
                 confidence_bands = "optimized"
             else:
                 confidence_bands = "simulated"
@@ -340,6 +379,7 @@ def plot_ecdf(
         )
 
         if difference:
+            covrage[21]= True
             lower -= cdf_at_eval_points
             higher -= cdf_at_eval_points
     else:
@@ -363,10 +403,19 @@ def plot_ecdf(
     )
 
     if backend is None:
+        covrage[22]= True
         backend = rcParams["plot.backend"]
     backend = backend.lower()
 
     plot = get_plotting_function("plot_ecdf", "ecdfplot", backend)
     ax = plot(**ecdf_plot_args)
+
+
+ 
+    with open("coverage.txt", "a") as output:
+        output.write(str(covrage)+"\n")
+
+
+
 
     return ax
